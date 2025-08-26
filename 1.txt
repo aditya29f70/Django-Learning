@@ -39,3 +39,48 @@ instead you can use --> "url 'name_of_url' room.id"
 
 # now we are going to work on database;
 
+# for getting default database which django give after 
+giving that command --> python manage.py migrate
+
+* when ever you add model to the database  so first thing you need to do
+make migration --> python manage.py makemirations
+a new migration file will be made in the migration folder
+so you will be often doing that makemigration (that will create new migation)
+and (python manage.py migrate) -> it will apply those made model (update)
+
+# now if you want to see those data base entries you have to access that django by default 
+admin page --> for that you have to make superuser
+--> python manage.py createsuperuser
+
+after login in the admin page you will see all the authentically made models
+but if you want to see your model what ever you made in you app you have to import those in admin.py
+and have to tell that we also want these models in admin page
+--> 'admin.site.register(model_name_that_you_want_to_specify)'
+now we can use these model in views.py (have to import that models from which you want to make query)
+--> you can do query by using model manager --> 'objects'
+Room.objects.all()
+this is how you can make query in the database --> 
+queryset= ModelName.objects.all() or .get(), 
+.filter(), .exclude()
+
+queryItem= ModelName.objects.get(attribute= 'value')
+
+queryset= ModelsName.object.filter(attribute='value')
+                          .filter(attribute_startswith= 'value')
+                          .filter(attribute_constrain= 'value')
+                          .filter(attribute_icontains= 'value')
+                          .filter(attribute_gt= 'value') (gt --> greater than)
+                          .fiter(attribute-gte= 'value')
+                          .fiter(attribute-lt= 'value')
+                          .fiter(attribute-lte= 'value')
+
+queryset= Project.object.filter(title='first Project').order_by('value1', '-value')
+
+item= ModelName.objects.create(attribute= 'value)
+
+# now need to make some more models 
+
+
+## now we are going to work on crud operation
+-> when ever sending the post request in django we need to passin 
+this '''csrf_token''' --> {% csrf_token %}
