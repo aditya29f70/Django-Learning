@@ -1,0 +1,41 @@
+MVT -> model, view , template --> design pattern --> django follow that pattern
+
+model= Data access layer
+template= presentation layer
+view -- businees logic
+
+django documentation --> https://www.djangoproject.com/ vvimportant
+repo --> https://github.com/Traversy-Media/StudyBud
+
+django-admin gives all the fn can use with that
+
+`django-admin startproject  project-name`
+
+in StudyBud folder go and run --> `python manage.py runserver`
+
+with running the server, do ==> python manage.py startapp
+--> it will make a new file and i want to that our app would i
+i has been generted so go --> setting.py --> go --> installed_app
+and add put --> 'base.apps.BaseConfig'
+and go app.py in 'base' and take 'BaseConfig(AppConfig)' class --> this is going to connect to the app directly
+
+* we are now working on urls.py make use 'request' obj in a fn
+the http request will be come through this 
+
+so make a urls.py file in base also so that will be you app urls file
+and that one urls.py file which in studybud --> root directly urls file
+
+Note: studybud would we our main folder
+
+# now adding templates so make template folder and tell settings.py
+template that we have new templates folder
+
+# inheritance templates by using % include 'navbar.html' %
+
+# so rapping the content we will be using --> {% block content %} {$ endblock $}
+
+# so you don't need to specify url as name basis eg--> /room/<str:pk> <== that is room.id
+instead you can use --> "url 'name_of_url' room.id"
+
+# now we are going to work on database;
+
