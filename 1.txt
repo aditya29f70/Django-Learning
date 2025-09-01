@@ -84,3 +84,11 @@ item= ModelName.objects.create(attribute= 'value)
 ## now we are going to work on crud operation
 -> when ever sending the post request in django we need to passin 
 this '''csrf_token''' --> {% csrf_token %}
+
+if i want order the room in some order so you have to define ordering , where you define the models
+by --> class Meta:
+        ordering = ['update', 'created'] --> it will order first according the updated time in defauld asscending order mean
+        first updated row come last so you have to reverse the order by using --> '-updated'
+
+
+note: if you don't put anything action in form will be post(if method is post) to the same endpt in which this template came
