@@ -2,4 +2,10 @@
     <h1>LOGo</h1>
 </a>
 
+<!-- here we don't need csrf_token here bz it get method -->
+<form method="GET" action="{% url 'home' %}">
+    <input type="text" name="q" placeholder="Search Room...">
+</form>
+
+<a href="{% url 'login' %}">Login</a>
 <hr>

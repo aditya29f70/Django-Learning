@@ -30,6 +30,7 @@
         <h1>Home Template</h1>
 
         <div>
+            <h5>{{ room_count }} room available.</h5>
             <a href="{% url 'create-room' %}">Create Room</a>
             <div>
                 {% for room in room %}
