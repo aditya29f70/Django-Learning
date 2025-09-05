@@ -92,3 +92,40 @@ by --> class Meta:
 
 
 note: if you don't put anything action in form will be post(if method is post) to the same endpt in which this template came
+
+
+# now we are going to make the header bar(where i search anything topic, room description , etc )  
+through that user can easly get there room
+--> go nav bar --> and form a search bar
+
+# now how you can make dynamic search here we are only searching on the basis of topic name
+if we add thing like name__icontains also in the filter thing in home room selection
+by , seperated and also more contrain on there room attribute so it will take those room which follow all these contrain
+
+but we have a 'Q' (from db.models)  look up method which allows us to use 'or' 'and' like statement passility
+so ` django.db.models import Q` so for and --> & and for or --> |
+
+we also want room count here (like total rooms found near you )
+so for that we manually use the len fn in the home view on rooms but there
+is a fast fn called --> `.count()`
+
+##### authentication:::
+we will build --> user login from , user resistation form , logout functionality
+--> django has by default session base authentication
+same has django admin page panel, when you will use postgre sql you will see that 
+session table , (go setting.py there also you will see in the installed_app
+session is installed)
+
+
+so when ever a user logind in this send to the backend , and session token is created
+and that session stored info about that user (go devtool> application you will see the cookies)
+so this is by defauld django made now it's time to make similar authentication uesr login page
+(our own authentication system)
+1. make a template --> registration login --> login_register.html
+note; django has there buildin registeration form and also login form what i have to do is we have to make ller
+now add there functionality in view page with name loginPage (note: don't take name only login bz there is a fn name login which will conflict if you take this name)
+
+### for error handling we gonna user ''django flash messages'' search it
+
+
+
