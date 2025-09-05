@@ -127,5 +127,10 @@ now add there functionality in view page with name loginPage (note: don't take n
 
 ### for error handling we gonna user ''django flash messages'' search it
 
+## know i want to restrict some pages to user see so we gonna use
+`django.contrib.auth.decorater import login_required`
+like if i put @login_required(login_required= 'give_the_redirect_page_what_ever_redirect_page_you_want') at any of the view fn basically we are restricting it
 
 
+# now want to also add that only those who made the room can change there own room , if 
+they gonna update any other room we gonna give i httpRespone (`from django.http import HttpRespone`)

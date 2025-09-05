@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Room, Topic
 from .forms import RoomForm
@@ -43,6 +45,10 @@ def loginPage(request):
     context= {}
     return render(request, 'base/login_register.html', context)
 
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
+
 
 
 def home(request):
@@ -63,7 +69,8 @@ def room(request, pk):
     context= {'room': room}
     return render(request, 'base/room.html', context)
 
-
+# basiscally i don't want anyone without login can create an room
+@login_required(login_url='/login')
 def createRoom(request):
     form = RoomForm()
     if request.method== 'POST':
@@ -77,6 +84,8 @@ def createRoom(request):
     context={'form': form }
     return render(request, 'base/room_form.html',context )
 
+# lly also i don't want anyone who withot login can update the room 
+@login_required(login_url='/login')
 def updateRoom(request, pk):
     room= Room.objects.get(id= pk)
     form= RoomForm(instance=room)
@@ -85,14 +94,21 @@ def updateRoom(request, pk):
         if form.is_valid():
             form.save()
             return redirect('home')
+        
+    if request.user!= room.host:
+        return HttpResponse("You can't change other person room!!")
 
     context= {'form': form}
     return render(request, 'base/room_form.html', context)
 
-
+# lly i want only authentationed user can delete the room
+@login_required(login_url='/login')
 def deleteRoom(request, pk):
     room= Room.objects.get(id= pk)
     if request.method== 'POST':
         room.delete()
         return redirect('home')
+    
+    if request.user!= room.host:
+        return HttpResponse("You can't change other person room!!")
     return render(request, 'base/delete.html', {"obj":room})
