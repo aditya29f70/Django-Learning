@@ -1,6 +1,13 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Room, Topic
 from .forms import RoomForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+
 
 # Create your views here.
 
@@ -11,16 +18,50 @@ from .forms import RoomForm
 # ]
 
 
+def loginPage(request):
+    if request.method== 'POST':
+        username= request.POST.get('username')
+        password= request.POST.get('password')
+    # now try to check is this user exist or not 
+        try:
+            user= User.objects.get(username=username)
+        except:
+            messages.error(request, "User does not exist")
+# if user exist then we have to authenticate()
+        user= authenticate(request, username= username, password= password)
+    # here we will get user obj base on there authentication result
+    # now what authent.. gonna do, either  gives us an error or return an user object
+    # which matches these credencials (like each thing username and password have there own creadencial)
 
+    # if user is good or pass there credencial then it is good to login
+        if user is not None:
+            login(request, user)
+        # what login does it add this user session(user info) in the database and inside our browser
+        # so user offical loged in 
+            return redirect('home')
+        else:
+            messages.error(request, 'Username Or password does not exist.')
+
+    context= {}
+    return render(request, 'base/login_register.html', context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
 
 
 
 def home(request):
     q= request.GET.get('q') if request.GET.get('q')!=None else ''
-    rooms= Room.objects.filter(topic__name__icontains= q) 
+    rooms= Room.objects.filter(
+        Q(topic__name__icontains= q) |
+        Q(name__icontains=q) |
+        Q(desciption__icontains=q)
+    )
     # rooms= Room.objects.all()
     topics= Topic.objects.all()
-    context= {'room':rooms, 'topic':topics}
+    room_count= rooms.count()
+    context= {'room':rooms, 'topic':topics, 'room_count':room_count}
     return render(request, 'base/home.html', context)
 
 def room(request, pk):
@@ -28,7 +69,8 @@ def room(request, pk):
     context= {'room': room}
     return render(request, 'base/room.html', context)
 
-
+# basiscally i don't want anyone without login can create an room
+@login_required(login_url='/login')
 def createRoom(request):
     form = RoomForm()
     if request.method== 'POST':
@@ -42,6 +84,8 @@ def createRoom(request):
     context={'form': form }
     return render(request, 'base/room_form.html',context )
 
+# lly also i don't want anyone who withot login can update the room 
+@login_required(login_url='/login')
 def updateRoom(request, pk):
     room= Room.objects.get(id= pk)
     form= RoomForm(instance=room)
@@ -50,14 +94,21 @@ def updateRoom(request, pk):
         if form.is_valid():
             form.save()
             return redirect('home')
+        
+    if request.user!= room.host:
+        return HttpResponse("You can't change other person room!!")
 
     context= {'form': form}
     return render(request, 'base/room_form.html', context)
 
-
+# lly i want only authentationed user can delete the room
+@login_required(login_url='/login')
 def deleteRoom(request, pk):
     room= Room.objects.get(id= pk)
     if request.method== 'POST':
         room.delete()
         return redirect('home')
+    
+    if request.user!= room.host:
+        return HttpResponse("You can't change other person room!!")
     return render(request, 'base/delete.html', {"obj":room})
